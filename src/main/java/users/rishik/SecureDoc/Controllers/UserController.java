@@ -1,6 +1,7 @@
 package users.rishik.SecureDoc.Controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class UserController {
 
     @Operation( summary = "Add a user to the database", description = "This endpoint is used to register a new user")
     @PostMapping("/register")
-    public ResponseEntity<?> addUser(@RequestBody UserRegisterDto user){
+    public ResponseEntity<?> addUser(@RequestBody @Valid UserRegisterDto user){
         return new ResponseEntity<>(this.userService.addUser(user), HttpStatus.CREATED);
     }
 

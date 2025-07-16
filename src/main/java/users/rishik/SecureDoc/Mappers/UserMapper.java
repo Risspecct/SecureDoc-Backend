@@ -4,11 +4,17 @@ import org.mapstruct.*;
 import users.rishik.SecureDoc.DTOs.UserRegisterDto;
 import users.rishik.SecureDoc.DTOs.UserUpdateDto;
 import users.rishik.SecureDoc.Entities.User;
+import users.rishik.SecureDoc.Enums.Roles;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     User toUser(UserRegisterDto userRegisterDto);
+
+    @AfterMapping
+    default void defaultRole (@MappingTarget User user){
+        user.setRole(Roles.USER);
+    }
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", ignore = true)
