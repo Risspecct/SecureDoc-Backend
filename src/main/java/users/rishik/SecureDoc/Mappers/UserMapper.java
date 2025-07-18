@@ -13,6 +13,7 @@ public interface UserMapper {
 
     @AfterMapping
     default void defaultRole (@MappingTarget User user){
+        System.out.println("Default Role set");
         user.setRole(Roles.USER);
     }
 

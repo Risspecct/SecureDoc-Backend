@@ -32,7 +32,6 @@ public class FileMetaData {
     @Column
     private String contentType;
 
-    // To be included when auth is added
-//    @Column(nullable = false)
-//    private String owner;
+    @Column(nullable = false)
+    private String owner;
 }

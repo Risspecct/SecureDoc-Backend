@@ -4,18 +4,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import users.rishik.SecureDoc.Annotations.NullOrNotBlank;
-import users.rishik.SecureDoc.Enums.Roles;
+
 
 @Data
 @NoArgsConstructor
-public class UserRegisterDto {
+public class LoginDto {
     @Email
+    @NotBlank
     private String email;
+
     @NotBlank
     private String password;
-    @NotBlank
-    private String username;
-    @NullOrNotBlank
-    private String Organization;
 }

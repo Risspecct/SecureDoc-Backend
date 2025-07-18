@@ -38,3 +38,4 @@ src/main/resources/application.properties
 
 # Documentation (optional, only if you don't want to track this file)
 HELP.md
+uploads

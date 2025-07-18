@@ -1,11 +1,8 @@
 package users.rishik.SecureDoc.Controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import users.rishik.SecureDoc.DTOs.UserRegisterDto;
 import users.rishik.SecureDoc.DTOs.UserUpdateDto;
 import users.rishik.SecureDoc.Services.UserService;
 
@@ -18,28 +15,22 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation( summary = "Add a user to the database", description = "This endpoint is used to register a new user")
-    @PostMapping("/register")
-    public ResponseEntity<?> addUser(@RequestBody @Valid UserRegisterDto user){
-        return new ResponseEntity<>(this.userService.addUser(user), HttpStatus.CREATED);
-    }
-
     @Operation( summary = "Get user Details", description = "This endpoint is used to get user details using their id")
     @GetMapping("/")
-    public ResponseEntity<?> getUser(@RequestParam long id){
-        return ResponseEntity.ok(this.userService.getUser(id));
+    public ResponseEntity<?> getUser(){
+        return ResponseEntity.ok(this.userService.getUser(this.userService.getUserId()));
     }
 
     @Operation( summary = "Update existing user", description = "This endpoint is used to update information of a user")
     @PutMapping("/")
-    public ResponseEntity<?> updateUser(@RequestParam long id, @RequestBody UserUpdateDto userUpdateDto){
-        return ResponseEntity.ok(this.userService.updateUser(id, userUpdateDto));
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateDto userUpdateDto){
+        return ResponseEntity.ok(this.userService.updateUser(this.userService.getUserId(), userUpdateDto));
     }
 
     @Operation( summary = "Delete user by id", description = "This endpoint is used to delete a user using their id")
     @DeleteMapping("/")
-    public ResponseEntity<?> deleteUser(@RequestParam long id){
-        this.userService.deleteUser(id);
+    public ResponseEntity<?> deleteUser(){
+        this.userService.deleteUser(this.userService.getUserId());
         return ResponseEntity.ok("User deleted successfully");
     }
 }
