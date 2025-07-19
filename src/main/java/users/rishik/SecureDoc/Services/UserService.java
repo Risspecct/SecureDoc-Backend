@@ -80,6 +80,15 @@ public class UserService {
         throw new RuntimeException("Authorization header missing or invalid");
     }
 
+    public String getUsername() {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String jwt = authHeader.substring(7);
+            return jwtService.extractUsername(jwt);
+        }
+        throw new RuntimeException("Authorization header missing or invalid");
+    }
+
     public JwtResponseDto verify(LoginDto user){
         if (!this.userRepository.existsByEmail(user.getEmail()))
             throw new NotFoundException("User email not found. Register to make a new account");

@@ -9,18 +9,22 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-//import org.springframework.security.access.AccessDeniedException;
-//import org.springframework.security.authentication.*;
-//import org.springframework.security.core.AuthenticationException;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.SignatureException;
 import java.util.stream.Collectors;
 
@@ -111,24 +115,24 @@ public class GlobalExceptionHandler {
     }
 
     // 403: User is authenticated but not authorized
-//    @ExceptionHandler(AccessDeniedException.class)
-//    public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
-//        return buildResponse(HttpStatus.FORBIDDEN, "Forbidden", "You do not have permission to access this resource.", request, ex);
-//    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.FORBIDDEN, "Forbidden", "You do not have permission to access this resource.", request, ex);
+    }
 
     // 401: Auth failures
-//    @ExceptionHandler({
-//            BadCredentialsException.class,
-//            UsernameNotFoundException.class,
-//            AccountExpiredException.class,
-//            LockedException.class,
-//            DisabledException.class,
-//            CredentialsExpiredException.class,
-//            AuthenticationCredentialsNotFoundException.class
-//    })
-//    public ResponseEntity<ApiErrorResponse> handleAuthentication(AuthenticationException ex, HttpServletRequest request) {
-//        return buildResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", ex.getMessage(), request, ex);
-//    }
+    @ExceptionHandler({
+            BadCredentialsException.class,
+            UsernameNotFoundException.class,
+            AccountExpiredException.class,
+            LockedException.class,
+            DisabledException.class,
+            CredentialsExpiredException.class,
+            AuthenticationCredentialsNotFoundException.class
+    })
+    public ResponseEntity<ApiErrorResponse> handleAuthentication(AuthenticationException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", ex.getMessage(), request, ex);
+    }
 
     @ExceptionHandler({ ExpiredJwtException.class, MalformedJwtException.class, SignatureException.class })
     public ResponseEntity<ApiErrorResponse> handleJwtErrors(Exception ex, HttpServletRequest request) {
@@ -152,6 +156,33 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleNotFound(NotFoundException ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage(), request, ex);
+    }
+
+    // 404: File not Found
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleFileNotFound(FileNotFoundException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, "File Not Found", ex.getMessage(), request, ex);
+    }
+
+    // 400: Malformed File request
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<ApiErrorResponse> handleMultipartException(MultipartException ex, HttpServletRequest request) {
+        String message = "Error processing file upload. Check if the file and request format are valid.";
+        return buildResponse(HttpStatus.BAD_REQUEST, "Invalid Multipart Request", message, request, ex);
+    }
+
+    // 413: Maximum File size exceeded
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiErrorResponse> handleMaxSizeException(MaxUploadSizeExceededException ex, HttpServletRequest request) {
+        String message = "File size exceeds the allowed limit.";
+        return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "File Too Large", message, request, ex);
+    }
+
+    // 500: Internal server error
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ApiErrorResponse> handleIOException(IOException ex, HttpServletRequest request) {
+        String message = "I/O error occurred during file processing.";
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "File I/O Error", message, request, ex);
     }
 
     // 500: All other unhandled exceptions
