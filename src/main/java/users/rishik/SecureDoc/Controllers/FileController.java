@@ -26,17 +26,23 @@ public class FileController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadFile(@RequestPart("file") MultipartFile file) throws IOException{
         log.info("Uploading user file");
-        this.fileService.uploadFile(file);
+        fileService.uploadFile(file);
         return ResponseEntity.ok("File Uploaded Successfully");
     }
 
     @Operation( summary = "Download a file", description = "This endpoint is used to download a requested file")
     @GetMapping("/download/{fileName}")
     public ResponseEntity<?> downloadFile(@PathVariable String fileName) throws IOException {
-        HashMap<String, Object> fileMap = this.fileService.downloadFile(fileName);
+        HashMap<String, Object> fileMap = fileService.downloadFile(fileName);
         return ResponseEntity.ok()
-                .contentType((MediaType) fileMap.get("media_type"))
+                .contentType(MediaType.parseMediaType((String) fileMap.get("content_type")))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .body(fileMap.get("resource"));
+    }
+
+    @Operation( summary = "Get own files", description = "This endpoint is used to fetch your own files")
+    @GetMapping("/me")
+    public ResponseEntity<?> getOwnFiles(){
+        return ResponseEntity.ok(fileService.getFiles());
     }
 }

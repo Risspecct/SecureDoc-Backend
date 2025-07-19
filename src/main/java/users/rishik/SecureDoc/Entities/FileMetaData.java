@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import users.rishik.SecureDoc.Enums.Roles;
 
 import java.time.LocalDateTime;
 
@@ -34,4 +35,7 @@ public class FileMetaData {
 
     @Column(nullable = false)
     private String owner;
+
+    @Column(nullable = false)
+    private Roles accessLevel;
 }

@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import users.rishik.SecureDoc.Entities.User;
+import users.rishik.SecureDoc.Enums.Roles;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,6 +18,10 @@ public class UserPrincipal implements UserDetails {
 
     public long getId(){
         return user.getId();
+    }
+
+    public Roles getRole(){
+        return user.getRole();
     }
 
     @Override
