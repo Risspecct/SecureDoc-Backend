@@ -49,8 +49,7 @@ public class SecurityConfig {
                                 "/refreshToken",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/docs",
-                                "/addDefaultUser")
+                                "/docs")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
