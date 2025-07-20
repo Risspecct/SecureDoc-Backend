@@ -178,6 +178,12 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "File Too Large", message, request, ex);
     }
 
+    @ExceptionHandler( java.nio.file.AccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccessException(java.nio.file.AccessDeniedException ex, HttpServletRequest request){
+        String message = "User doesn't have proper access";
+        return buildResponse(HttpStatus.FORBIDDEN, "Access Denied", message, request, ex);
+    }
+
     // 500: Internal server error
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ApiErrorResponse> handleIOException(IOException ex, HttpServletRequest request) {

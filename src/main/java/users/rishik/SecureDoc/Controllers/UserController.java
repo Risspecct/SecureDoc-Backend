@@ -2,10 +2,12 @@ package users.rishik.SecureDoc.Controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import users.rishik.SecureDoc.DTOs.UserUpdateDto;
 import users.rishik.SecureDoc.Services.UserService;
 
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("user")
 @RestController
 public class UserController {

@@ -9,6 +9,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 public class RoleHierarchyConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("ROLE_ADMIN >  ROLE_USER");
+        return RoleHierarchyImpl.fromHierarchy("ROLE_ADMIN > ROLE_MANAGER > ROLE_USER");
     }
 }

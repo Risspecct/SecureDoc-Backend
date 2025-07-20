@@ -38,4 +38,7 @@ public class FileMetaData {
 
     @Column(nullable = false)
     private Roles accessLevel;
+
+    @Column(nullable = false)
+    private int accessWeight;
 }
