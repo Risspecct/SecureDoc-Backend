@@ -10,5 +10,5 @@ public class UserUpdateDto {
     @NullOrNotBlank
     private String username;
     @NullOrNotBlank
-    private String organization;
+    private String team;
 }

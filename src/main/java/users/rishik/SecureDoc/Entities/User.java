@@ -31,5 +31,5 @@ public class User {
     private Roles role;
 
     @Column
-    private String organization;
+    private String team;
 }

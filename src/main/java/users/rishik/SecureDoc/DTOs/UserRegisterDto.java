@@ -16,5 +16,5 @@ public class UserRegisterDto {
     @NotBlank
     private String username;
     @NullOrNotBlank
-    private String Organization;
+    private String team;
 }

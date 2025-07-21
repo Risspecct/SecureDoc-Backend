@@ -6,5 +6,5 @@ public interface UserProfileView{
     String getUsername();
     String getEmail();
     String getRole();
-    String getOrganization();
+    String getTeam();
 }

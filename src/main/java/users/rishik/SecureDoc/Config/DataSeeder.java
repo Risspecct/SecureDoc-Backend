@@ -20,6 +20,8 @@ public class DataSeeder {
     @PostConstruct
     public void seedData(){
         createIfNotExists("default@example.com", Roles.USER);
+        createIfNotExists("default1@example.com", Roles.USER);
+        createIfNotExists("default2@example.com", Roles.USER);
         createIfNotExists("manager@example.com", Roles.MANAGER);
         createIfNotExists("admin@example.com", Roles.ADMIN);
     }
@@ -30,7 +32,7 @@ public class DataSeeder {
         user.setPassword(encoder.encode("pas123"));
         user.setRole(role);
         user.setUsername(role.toString());
-        user.setOrganization("Testers");
+        user.setTeam("Testers");
 
         userRepository.save(user);
         System.out.println("User data seeded successfully");
