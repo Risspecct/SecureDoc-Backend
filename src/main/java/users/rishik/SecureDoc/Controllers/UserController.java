@@ -18,19 +18,19 @@ public class UserController {
     }
 
     @Operation( summary = "Get user Details", description = "This endpoint is used to get user details using their id")
-    @GetMapping("/")
+    @GetMapping("/me")
     public ResponseEntity<?> getUser(){
         return ResponseEntity.ok(this.userService.getCurrentUser());
     }
 
     @Operation( summary = "Update existing user", description = "This endpoint is used to update information of a user")
-    @PutMapping("/")
+    @PutMapping("/me")
     public ResponseEntity<?> updateUser(@RequestBody UserUpdateDto userUpdateDto){
         return ResponseEntity.ok(this.userService.updateUser(userUpdateDto));
     }
 
     @Operation( summary = "Delete user by id", description = "This endpoint is used to delete a user using their id")
-    @DeleteMapping("/")
+    @DeleteMapping("/me")
     public ResponseEntity<?> deleteCurrentUser(){
         this.userService.deleteCurrentUser();
         return ResponseEntity.ok("User deleted successfully");
