@@ -74,7 +74,7 @@ public class FileService {
         FileMetaData file = fileRepository.findByOriginalName(fileName)
                 .orElseThrow(() -> new NotFoundException("No file found with name: " + fileName));
 
-        if (!isAccessible(file)) throw new AccessDeniedException("you are not allowed to access this file");
+        if (isNotAccessible(file)) throw new AccessDeniedException("you are not allowed to access this file");
 
         Path filePath = storage.getUploadPath().resolve(fileName).normalize();
         if (!Files.exists(filePath)) throw new FileNotFoundException("File not found: " + fileName);
@@ -107,7 +107,20 @@ public class FileService {
         return fileList;
     }
 
-    public boolean isAccessible(FileMetaData file){
-        return file.getAccessWeight() <= securityService.getCurrentUser().getRole().getLevel();
+    public void deleteFile(String fileName) throws IOException{
+        FileMetaData file = fileRepository.findByOriginalName(fileName)
+                .orElseThrow(() -> new NotFoundException("No File found with name: " + fileName));
+
+        if (isNotAccessible(file)) throw new AccessDeniedException("You cannot access this file");
+
+        Path filePath = storage.getUploadPath().resolve(fileName).normalize();
+        if (!Files.exists(filePath)) throw new FileNotFoundException("File not found: " + fileName);
+
+        fileRepository.deleteById(file.getId());
+        Files.delete(filePath);
+    }
+
+    private boolean isNotAccessible(FileMetaData file){
+        return file.getAccessWeight() > securityService.getCurrentUser().getRole().getLevel();
     }
 }

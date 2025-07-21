@@ -54,4 +54,11 @@ public class FileController {
     public ResponseEntity<?> getAccessibleFiles(){
         return ResponseEntity.ok(fileService.getAccessibleFiles());
     }
+
+    @Operation( summary = "Delete file", description = "This endpoint is used to delete requested files")
+    @DeleteMapping("/{fileName}")
+    public ResponseEntity<?> deleteFile(@PathVariable String fileName) throws IOException{
+        fileService.deleteFile(fileName);
+        return ResponseEntity.ok("File Deleted Successfully");
+    }
 }
