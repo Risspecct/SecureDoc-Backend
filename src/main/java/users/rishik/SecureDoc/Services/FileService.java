@@ -10,6 +10,7 @@ import users.rishik.SecureDoc.Enums.Roles;
 import users.rishik.SecureDoc.Exceptions.NotFoundException;
 import users.rishik.SecureDoc.Projections.FileView;
 import users.rishik.SecureDoc.Repositories.FileRepository;
+import users.rishik.SecureDoc.Repositories.UserRepository;
 import users.rishik.SecureDoc.Security.Service.SecurityService;
 
 import java.io.FileNotFoundException;
@@ -28,11 +29,13 @@ public class FileService {
     private final FileRepository fileRepository;
     private final FileStorageProperties storage;
     private final SecurityService securityService;
+    private final UserRepository userRepository;
 
-    FileService(FileRepository fileRepository, FileStorageProperties storage, SecurityService securityService) {
+    FileService(FileRepository fileRepository, FileStorageProperties storage, SecurityService securityService, UserRepository userRepository) {
         this.fileRepository = fileRepository;
         this.storage = storage;
         this.securityService = securityService;
+        this.userRepository = userRepository;
     }
 
     // Add File
@@ -61,11 +64,18 @@ public class FileService {
         metaData.setOwner(securityService.getCurrentUser().getUsername());
         metaData.setAccessLevel(accessLevel);
         metaData.setAccessWeight(accessLevel.getLevel());
+        metaData.setUser(userRepository.findById(securityService.getCurrentUser().getId())
+                .orElseThrow(() -> new NotFoundException("Invalid user id")));
         fileRepository.save(metaData);
     }
 
     // Download File
     public HashMap<String, Object> downloadFile(String fileName) throws IOException {
+        FileMetaData file = fileRepository.findByOriginalName(fileName)
+                .orElseThrow(() -> new NotFoundException("No file found with name: " + fileName));
+
+        if (!isAccessible(file)) throw new AccessDeniedException("you are not allowed to access this file");
+
         Path filePath = storage.getUploadPath().resolve(fileName).normalize();
         if (!Files.exists(filePath)) throw new FileNotFoundException("File not found: " + fileName);
 
@@ -95,5 +105,9 @@ public class FileService {
         if (fileList.isEmpty())
             throw  new NotFoundException("No Files found");
         return fileList;
+    }
+
+    public boolean isAccessible(FileMetaData file){
+        return file.getAccessWeight() <= securityService.getCurrentUser().getRole().getLevel();
     }
 }
