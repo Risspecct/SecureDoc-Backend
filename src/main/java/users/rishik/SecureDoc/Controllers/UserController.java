@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import users.rishik.SecureDoc.DTOs.UserUpdateDto;
 import users.rishik.SecureDoc.Services.UserService;
 
+@SuppressWarnings("unused")
 @PreAuthorize("hasRole('USER')")
 @RequestMapping("user")
 @RestController

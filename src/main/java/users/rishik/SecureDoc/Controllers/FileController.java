@@ -14,6 +14,7 @@ import users.rishik.SecureDoc.Services.FileService;
 import java.io.IOException;
 import java.util.HashMap;
 
+@SuppressWarnings("unused")
 @PreAuthorize("hasRole('USER')")
 @Slf4j
 @RequestMapping("/files")

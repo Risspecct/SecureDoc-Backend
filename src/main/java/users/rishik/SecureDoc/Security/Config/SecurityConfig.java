@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import users.rishik.SecureDoc.Security.Filters.JwtAuthenticationFilter;
 import users.rishik.SecureDoc.Security.Filters.RateLimiterFilter;
 
+@SuppressWarnings("unused")
 @Slf4j
 @EnableMethodSecurity
 @EnableWebSecurity

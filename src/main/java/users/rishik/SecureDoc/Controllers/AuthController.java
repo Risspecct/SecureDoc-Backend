@@ -21,6 +21,7 @@ import users.rishik.SecureDoc.Security.Service.JwtService;
 import users.rishik.SecureDoc.Security.Service.RefreshTokenService;
 import users.rishik.SecureDoc.Services.UserService;
 
+@SuppressWarnings("unused")
 @Slf4j
 @RestController
 public class AuthController {

@@ -9,6 +9,7 @@ import users.rishik.SecureDoc.Entities.User;
 import users.rishik.SecureDoc.Enums.Roles;
 import users.rishik.SecureDoc.Repositories.UserRepository;
 
+@SuppressWarnings("unused")
 @Component
 @Profile("dev")
 @RequiredArgsConstructor

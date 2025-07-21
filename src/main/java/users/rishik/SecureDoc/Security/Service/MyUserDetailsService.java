@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import users.rishik.SecureDoc.Repositories.UserRepository;
 import users.rishik.SecureDoc.Security.Principals.UserPrincipal;
 
+@SuppressWarnings("unused")
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
