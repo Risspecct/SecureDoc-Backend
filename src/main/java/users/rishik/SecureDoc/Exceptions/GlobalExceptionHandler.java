@@ -88,6 +88,13 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Malformed Request", message, request, ex);
     }
 
+    // 400: Entity Already Exists
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ApiErrorResponse> handleAlreadyExistError(AlreadyExistsException ex, HttpServletRequest request) {
+        String message = "Entity already exists";
+        return buildResponse(HttpStatus.BAD_REQUEST, "Already Exists", message, request, ex);
+    }
+
     // 404: No matching endpoint
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleNotFoundPath(NoHandlerFoundException ex, HttpServletRequest request) {
