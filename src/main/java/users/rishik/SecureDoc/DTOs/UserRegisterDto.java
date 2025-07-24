@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import users.rishik.SecureDoc.Annotations.NullOrNotBlank;
+import users.rishik.SecureDoc.Entities.Team;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +16,4 @@ public class UserRegisterDto {
     private String password;
     @NotBlank
     private String username;
-    @NullOrNotBlank
-    private String team;
 }

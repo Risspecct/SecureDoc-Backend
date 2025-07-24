@@ -9,6 +9,4 @@ import users.rishik.SecureDoc.Annotations.NullOrNotBlank;
 public class UserUpdateDto {
     @NullOrNotBlank
     private String username;
-    @NullOrNotBlank
-    private String team;
 }

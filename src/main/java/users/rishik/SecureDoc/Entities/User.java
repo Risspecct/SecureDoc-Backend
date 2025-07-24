@@ -30,6 +30,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
-    @Column
-    private String team;
+    @ManyToOne
+    private Team team;
 }

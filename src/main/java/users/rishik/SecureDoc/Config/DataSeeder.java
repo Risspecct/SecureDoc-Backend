@@ -32,7 +32,6 @@ public class DataSeeder {
         user.setPassword(encoder.encode("pas123"));
         user.setRole(role);
         user.setUsername(role.toString());
-        user.setTeam("Testers");
 
         userRepository.save(user);
         System.out.println("User data seeded successfully");
