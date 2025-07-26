@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import users.rishik.SecureDoc.Config.FileStorageProperties;
 import users.rishik.SecureDoc.Entities.FileMetaData;
+import users.rishik.SecureDoc.Entities.User;
 import users.rishik.SecureDoc.Enums.Roles;
 import users.rishik.SecureDoc.Exceptions.NotFoundException;
 import users.rishik.SecureDoc.Projections.FileView;
@@ -41,7 +42,7 @@ public class FileService {
     // Add File
     public void uploadFile(MultipartFile file, Roles accessLevel) throws IOException {
 
-        Roles currentUserRole = securityService.getCurrentUser().getRole();
+        Roles currentUserRole = getCurrentUser().getRole();
 
         if (file.isEmpty()) throw new IllegalArgumentException("Empty File submitted");
         Path targetPath = storage.getUploadPath().resolve(Objects.requireNonNull(file.getOriginalFilename())).normalize();
@@ -64,6 +65,7 @@ public class FileService {
         metaData.setOwner(securityService.getCurrentUser().getUsername());
         metaData.setAccessLevel(accessLevel);
         metaData.setAccessWeight(accessLevel.getLevel());
+        metaData.setTeam(getCurrentUser().getTeam());
         metaData.setUser(userRepository.findById(securityService.getCurrentUser().getId())
                 .orElseThrow(() -> new NotFoundException("Invalid user id")));
         fileRepository.save(metaData);
@@ -93,7 +95,7 @@ public class FileService {
 
     // Get own Files
     public List<FileView> getFiles() {
-        List<FileView> fileList = fileRepository.findAllByOwner(securityService.getCurrentUser().getUsername());
+        List<FileView> fileList = fileRepository.findAllByOwner(getCurrentUser().getUsername());
         if (fileList.isEmpty())
             throw new NotFoundException("No files found uploaded by the user: " + securityService.getCurrentUser().getUsername());
         return fileList;
@@ -101,7 +103,7 @@ public class FileService {
 
     // Get Files based on access level
     public List<FileView> getAccessibleFiles() {
-        List<FileView> fileList = fileRepository.findAllByAccessWeightLessThanEqual(securityService.getCurrentUser().getRole().getLevel());
+        List<FileView> fileList = fileRepository.findAllByAccessWeightLessThanEqualAndTeam_Id(getCurrentUser().getRole().getLevel(), getCurrentUser().getTeam().getId());
         if (fileList.isEmpty())
             throw  new NotFoundException("No Files found");
         return fileList;
@@ -121,6 +123,12 @@ public class FileService {
     }
 
     private boolean isNotAccessible(FileMetaData file){
-        return file.getAccessWeight() > securityService.getCurrentUser().getRole().getLevel();
+        return (file.getAccessWeight() > getCurrentUser().getRole().getLevel() ||
+                Objects.equals(file.getTeam().getId(), getCurrentUser().getTeam().getId()));
+    }
+
+    private User getCurrentUser(){
+        long userId = securityService.getCurrentUser().getId();
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("No user found with user id: " + userId));
     }
 }

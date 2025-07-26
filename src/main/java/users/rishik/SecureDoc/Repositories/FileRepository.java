@@ -11,6 +11,5 @@ public interface FileRepository extends JpaRepository<FileMetaData, Long> {
     Optional<FileMetaData> findByOriginalName(String originalName);
 
     List<FileView> findAllByOwner(String owner);
-
-    List<FileView> findAllByAccessWeightLessThanEqual(int accessWeight);
+    List<FileView> findAllByAccessWeightLessThanEqualAndTeam_Id(int accessWeight, Long teamId);
 }
