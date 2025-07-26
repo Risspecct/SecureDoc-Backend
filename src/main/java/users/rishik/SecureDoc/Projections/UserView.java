@@ -4,5 +4,10 @@ package users.rishik.SecureDoc.Projections;
 public interface UserView {
     Long getId();
     String getUsername();
-    TeamListView getTeam();
+    TeamView getTeam();
+
+    interface TeamView {
+        Long getId();
+        String getName();
+    }
 }
