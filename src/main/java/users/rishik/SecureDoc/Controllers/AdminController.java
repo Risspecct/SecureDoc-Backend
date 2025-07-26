@@ -21,7 +21,7 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    // FILE RELATED ENDPOINTS
+    // TEAM RELATED ENDPOINTS
 
     @Operation( summary = "Create a team", description = "This endpoint is used to create a team")
     @PostMapping("/teams/create")
