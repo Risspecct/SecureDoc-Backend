@@ -1,5 +1,6 @@
 package users.rishik.SecureDoc.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class FileService {
     private final FileRepository fileRepository;
@@ -41,7 +43,6 @@ public class FileService {
 
     // Add File
     public void uploadFile(MultipartFile file, Roles accessLevel) throws IOException {
-
         Roles currentUserRole = getCurrentUser().getRole();
 
         if (file.isEmpty()) throw new IllegalArgumentException("Empty File submitted");
@@ -52,6 +53,8 @@ public class FileService {
         if (currentUserRole.getLevel() >= accessLevel.getLevel())
             saveMetaData(file, accessLevel);
         else throw new AccessDeniedException("You can only upload files with access level " + currentUserRole + " or lower");
+
+        log.info("File {} uploaded by user: {}", file.getOriginalFilename(), getCurrentUser().getEmail());
     }
 
     public void saveMetaData(MultipartFile file, Roles accessLevel){
@@ -90,6 +93,7 @@ public class FileService {
         fileMap.put("resource", resource);
         fileMap.put("content_type", Files.probeContentType(filePath));
 
+        log.info("File {} downloaded by user: {}", file.getFileName(), getCurrentUser().getEmail());
         return fileMap;
     }
 
@@ -120,6 +124,7 @@ public class FileService {
 
         fileRepository.deleteById(file.getId());
         Files.delete(filePath);
+        log.info("File {} deleted by user: {}", file.getFileName(), getCurrentUser().getEmail());
     }
 
     private boolean isNotAccessible(FileMetaData file){

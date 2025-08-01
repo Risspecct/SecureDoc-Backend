@@ -1,5 +1,6 @@
 package users.rishik.SecureDoc.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import users.rishik.SecureDoc.Entities.User;
 import users.rishik.SecureDoc.Enums.Roles;
@@ -10,6 +11,7 @@ import users.rishik.SecureDoc.Repositories.UserRepository;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class AdminService {
     private final UserRepository userRepository;
@@ -32,10 +34,12 @@ public class AdminService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("No user exists with id: " + userId));
         user.setRole(role);
         userRepository.save(user);
+        log.info("Role changed for user with id:{}", user);
     }
 
     public void deleteUser(long userId){
         if (!userRepository.existsById(userId)) throw new NotFoundException("No user exists with id: " + userId);
         userRepository.deleteById(userId);
+        log.info("User with id {} deleted", userId);
     }
 }

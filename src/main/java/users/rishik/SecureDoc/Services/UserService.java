@@ -60,6 +60,7 @@ public class UserService {
     }
 
     public UserProfileView updateUser(UserUpdateDto userUpdateDto){
+        log.info("Updating user with email: {}", securityService.getCurrentUser().getUsername());
         User user = this.userRepository.findById(securityService.getCurrentUser().getId())
                 .orElseThrow(() -> new NotFoundException("No user associated with the id: " + securityService.getCurrentUser().getId()));
         this.userMapper.updateUserFromDto(userUpdateDto, user);
@@ -68,6 +69,7 @@ public class UserService {
     }
 
     public void deleteCurrentUser(){
+        log.info("Deleting user with username: {}", securityService.getCurrentUser().getUsername());
         this.userRepository.deleteById(securityService.getCurrentUser().getId());
     }
 

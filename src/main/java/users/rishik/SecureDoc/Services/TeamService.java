@@ -1,5 +1,6 @@
 package users.rishik.SecureDoc.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import users.rishik.SecureDoc.Entities.Team;
@@ -16,6 +17,7 @@ import users.rishik.SecureDoc.Security.Service.SecurityService;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class TeamService {
 
@@ -69,6 +71,7 @@ public class TeamService {
         team.setLead(user);
         userRepository.save(user);
         teamRepository.save(team);
+        log.info("User {} assigned as TL for team {} by {}", userId, teamId, securityService.getCurrentUser().getId());
     }
 
     public void addMember(long userId, long teamId) {
@@ -87,6 +90,7 @@ public class TeamService {
             userRepository.save(user);
             teamRepository.save(team);
         }
+        log.info("User {} added to team {} by {}", userId, teamId, securityService.getCurrentUser().getUsername());
     }
 
     public void removeMember(long userId, long teamId) {
@@ -103,6 +107,7 @@ public class TeamService {
 
         userRepository.save(user);
         teamRepository.save(team);
+        log.info("User {} removed from team {} by {}", userId, teamId, securityService.getCurrentUser().getUsername());
     }
 
     public void addMember(long userId) {
@@ -137,6 +142,7 @@ public class TeamService {
         }
 
         teamRepository.delete(team);
+        log.info("Team {} deleted by {}", teamId, securityService.getCurrentUser().getUsername());
     }
 
     private Team getTeam(long teamId) {
