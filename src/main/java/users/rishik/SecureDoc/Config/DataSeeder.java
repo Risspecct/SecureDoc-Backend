@@ -48,6 +48,7 @@ public class DataSeeder {
     }
 
     private void createTeamIfNotExists(String name, String email){
+        if (userRepository.existsByEmail(email)) return;
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found in seeder"));
         Team team = new Team();
         team.setName(name);
