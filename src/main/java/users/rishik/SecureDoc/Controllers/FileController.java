@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +13,6 @@ import users.rishik.SecureDoc.Enums.Roles;
 import users.rishik.SecureDoc.Services.FileService;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 @SuppressWarnings("unused")
 @PreAuthorize("hasRole('USER')")
@@ -53,13 +51,9 @@ public class FileController {
             @ApiResponse( responseCode = "401", description = "Not Authorized"),
             @ApiResponse( responseCode = "500", description = "Internal Server Error")
     })
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<?> downloadFile(@PathVariable String fileName) throws IOException {
-        HashMap<String, Object> fileMap = fileService.downloadFile(fileName);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType((String) fileMap.get("content_type")))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-                .body(fileMap.get("resource"));
+    @GetMapping("/download/{fileId}")
+    public ResponseEntity<?> downloadFile(@PathVariable long fileId) throws IOException {
+        return fileService.getFileResource(fileId);
     }
 
     @Operation( summary = "Get own files", description = "This endpoint is used to fetch your own files")
@@ -96,9 +90,9 @@ public class FileController {
             @ApiResponse( responseCode = "401", description = "Not Authorized"),
             @ApiResponse( responseCode = "500", description = "Internal Server Error")
     })
-    @DeleteMapping("/{fileName}")
-    public ResponseEntity<?> deleteFile(@PathVariable String fileName) throws IOException{
-        fileService.deleteFile(fileName);
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<?> deleteFile(@PathVariable long fileId) throws IOException{
+        fileService.deleteFile(fileId);
         return ResponseEntity.ok("File Deleted Successfully");
     }
 }
